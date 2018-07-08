@@ -2,3 +2,5 @@
 
 !.gitignore
 !.tmux.conf
+!.tmux/
+\.tmux/\.tmux\.conf\.local
