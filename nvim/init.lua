@@ -31,9 +31,18 @@ vim.cmd [[
 -- Tema
 -- ----
 
-vim.g.ayucolor = "dark"
+-- vim.g.ayucolor = "dark"
+vim.g.ayucolor = "mirage"
 vim.cmd.colorscheme("ayu")
 -- vim.cmd.colorscheme("tokyonight")
+
+-- Cor dos números de linha
+vim.api.nvim_set_hl(0, "LineNr", { fg = "#f5e3b3", bold = false })
+
+
+-- nerdtree
+-- ---------
+vim.g.NERDTreeShowHidden = 1
 
 
 -- Configurações básicas
@@ -48,6 +57,7 @@ vim.opt.expandtab = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.termguicolors = true
 vim.opt.incsearch = true
+vim.opt.fixendofline = true -- EOF
 
 
 -- Configurações de plugins do Git
@@ -156,7 +166,7 @@ keymap('n', '<F5>', ':UndotreeToggle<CR>')
 
 keymap('v', '<C-c>', '"+y')
 keymap('n', '<C-S-]>', ':vsp<CR><C-w>l<C-]>')
-keymap('n', '<C-S-/>', ':vsp<CR><C-w>l')
+keymap('n', '<C-S-[>', ':sp<CR><C-w>j<C-]>')
 
 keymap('n', '<leader>gs', '<cmd>Telescope git_status<cr>')
 keymap('n', '<leader>gc', '<cmd>Telescope git_bcommits<cr>')
@@ -167,6 +177,15 @@ keymap('n', '<leader>lg', ':LazyGit<CR>')
 
 keymap("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
 
+-- Tabs
+keymap('n', '<leader>tn', ':tabnew<CR>', { desc = 'Nova aba' })
+keymap('n', '<leader>tc', ':tabclose<CR>', { desc = 'Fechar aba' })
+keymap('n', '<leader>t]', ':tabnext<CR>', { desc = 'Próxima aba' })
+keymap('n', '<leader>t[', ':tabprevious<CR>', { desc = 'Aba anterior' })
+keymap('n', '<leader>tm', ':-tabmove<CR>', { desc = 'Mover aba para esquerda' })
+keymap('n', '<leader>tM', ':+tabmove<CR>', { desc = 'Mover aba para direita' })
+keymap('n', '<leader>tt', ':tabs<CR>', { desc = 'Listar abas' })
+keymap('n', '<leader>to', ':tabedit ', { desc = 'Abrir em nova aba' })
 
 -- Claude Code
 keymap("n", "<leader>ac", "<cmd>ClaudeCode<cr>", { desc = "Claude: Toggle" })
@@ -185,7 +204,13 @@ keymap("n", "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", { desc = "Claude: Deny 
 
 require('lualine').setup { sections = { lualine_c = { { 'filename', path = 1 } } } }
 
-require("claudecode").setup({})
+require('config.telescope.multigrep').setup()
+
+require("claudecode").setup({
+    opts = {
+        terminal_cmd = "/Users/caiovictormc/.claude/local/claude",
+    }
+})
 
 
 local lspconfig = require('lspconfig')
@@ -196,6 +221,7 @@ lspconfig.pyright.setup {
       analysis = {
         autoSearchPaths = true,
         useLibraryCodeForTypes = true,
+        -- diagnosticMode = 'openFilesOnly',
         typeCheckingMode = "off",
       }
     }
